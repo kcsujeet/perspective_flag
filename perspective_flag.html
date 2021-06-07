@@ -1,0 +1,217 @@
+<div class="container">
+  <div class="card card-drop-shadow">
+    <div class="layer-1">
+      <div class="flag top"></div>
+      <div class="flag bottom"></div>
+    </div>
+
+    <div class="layer-2">
+      <div class="flag top-inner"></div>
+      <div class="flag bottom-inner"></div>
+    </div>
+
+    <div class="layer-3">
+      <div class="top-moon"><span></span></div>
+      <div class="top-sun"></div>
+      <div class="bottom-sun"></div>
+    </div>
+    
+  </div>
+</div>
+
+<script type="module">
+  const card = document.querySelector(".card");
+  const cardRect = card.getBoundingClientRect();
+  const topsun = document.querySelector(".top-sun");
+  const topmoon = document.querySelector(".top-moon");
+  const bottomsun = document.querySelector(".bottom-sun");
+
+
+  const layer1 = document.querySelector('.layer-1')
+  const layer2 = document.querySelector('.layer-2')
+  const layer3 = document.querySelector('.layer-3')
+
+  const setProp = (el, prop, value) => el.style.setProperty(prop, value);
+
+  card.addEventListener("mousemove", (evt) => {
+    const x = (evt.clientX - cardRect.left) / cardRect.width;
+    const dx = -(x - 0.5);
+    const dxNorm = Math.min(Math.max(dx, -0.5), 0.5);
+    const y = (evt.clientY - cardRect.top) / cardRect.height - 0.5;
+    const transform_values = `perspective(1000px) rotateY(${dxNorm * 45}deg) rotateX(${y * 45}deg)`
+    
+    const layer2_translateZ = 'translateZ(150px)'
+    const layer3_translateZ = 'translateZ(300px)'
+
+    setProp(layer1, 'transform', `${transform_values}`)
+    setProp(layer2, 'transform', `${transform_values} ${layer2_translateZ}`)
+    setProp(topsun, 'transform', `${transform_values} ${layer3_translateZ}`)
+    setProp(topmoon, 'transform', `${transform_values} ${layer3_translateZ}`)
+    setProp(bottomsun, 'transform', `${transform_values} ${layer3_translateZ}`)
+    
+    topsun.classList.add('top-sun-shadow')
+    bottomsun.classList.add('bottom-sun-shadow')
+  });
+
+  card.addEventListener("mouseleave", () => {
+    setProp(layer1, 'transform', 'none')
+    setProp(layer2, 'transform', 'none')
+    setProp(topsun, 'transform', 'none')
+    setProp(topmoon, 'transform', 'none')
+    setProp(bottomsun, 'transform', 'none')
+    
+    topsun.classList.remove('top-sun-shadow')
+    bottomsun.classList.remove('bottom-sun-shadow')
+  });
+</script>
+
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
+
+  html,
+  body {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Inconsolata", monospace;
+    font-size: 24px;
+    color: #fffafa;
+  }
+
+  .container{
+    transform: scale(.9);
+  }
+
+  .layer-2, .layer-3{
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .card {
+    position: relative;
+    transform-style: preserve-3d;
+    height: 24em;
+    width: auto;
+  }
+
+  .card,
+  .top-sun,
+  .top-moon,
+  .bottom-sun {
+    transition: all ease-in-out;
+  }
+
+  .card-drop-shadow {
+    filter: drop-shadow(20px 12px 12px rgb(82, 79, 79));
+  }
+
+  .flag {
+    border-style: solid;
+    border-color: transparent transparent transparent #003893;
+  }
+
+  .flag.top {
+    border-width: 12em 0 0 18em;
+  }
+
+  .flag.bottom {
+    margin-top: -32%;
+    border-width: 18em 0 0 18em;
+  }
+
+  .flag.top-inner {
+    border-width: 9em 0 0 14.5em;
+    border-color: transparent transparent transparent #dc143c;
+    margin-top: 15%;
+    margin-left: 6%;
+  }
+
+  .flag.bottom-inner {
+    border-width: 15em 0 0 15em;
+    border-color: transparent transparent transparent #dc143c;
+    margin-top: -20%;
+    margin-left: 6%;
+  }
+
+  .top-sun {
+    background: white;
+    position: absolute;
+    width: 2em;
+    height: 2em;
+    left: 3.5em;
+    top: 7.5em;
+    z-index: 10;
+  }
+
+  .bottom-sun {
+    background: white;
+    position: absolute;
+    width: 3em;
+    height: 3em;
+    left: 3.5em;
+    top: 17em;
+  }
+
+  .top-sun::before,
+  .top-sun::after {
+    height: 2em;
+    width: 2em;
+  }
+
+  .bottom-sun::before,
+  .bottom-sun::after {
+    height: 3em;
+    width: 3em;
+  }
+
+  .top-sun::before,
+  .top-sun::after,
+  .bottom-sun::before,
+  .bottom-sun::after {
+    content: "";
+    background: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .top-sun::before,
+  .bottom-sun::before {
+    transform: rotate(30deg);
+  }
+
+  .top-sun::after,
+  .bottom-sun::after {
+    transform: rotate(60deg);
+  }
+
+  .top-moon {
+    width: 4em;
+    height: 4em;
+    top: 5.5em;
+    left: 2.5em;
+    position: absolute;
+    z-index: 12;
+  }
+
+  .top-moon span {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    box-shadow: 0.5em 0.5em 0 0 white;
+    transform: rotate(45deg);
+    display: block;
+  }
+
+ .bottom-sun-shadow{
+    filter: drop-shadow(20px 4px 16px rgb(110 45 45));
+  }
+
+  .top-sun-shadow{
+    filter: drop-shadow(18px 20px 20px rgb(30 30 30));
+  }
+
+</style>
